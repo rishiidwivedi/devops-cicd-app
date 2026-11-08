@@ -1,4 +1,4 @@
-name: My First CI Pipeline
+name: Spring Boot CI/CD Pipeline
 
 on:
   push:
@@ -22,11 +22,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show files
-        run: ls -la
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
 
-      - name: Print message
-        run: echo "GitHub Actions pipeline started successfully"
+      - name: Run tests
+        run: mvn clean test
 
-      - name: Check Git version
-        run: git --version
+      - name: Build application
+        run: mvn package -DskipTests
+
+      - name: Check generated JAR
+        run: ls -lh target/
